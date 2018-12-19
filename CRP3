@@ -1,0 +1,23 @@
+#CRP3 - by Frederik Surrow
+
+import sensor, image, time
+
+thresholds = (245, 255)
+
+sensor.reset()                              #Resets sensor
+sensor.set_pixformat(sensor.GRAYSCALE)      #Set color option
+sensor.set_framesize(sensor.VGA)            #Set resolution
+sensor.skip_frames(time = 2000)
+sensor.set_auto_gain(False)
+sensor.set_auto_whitebal(False)
+#sensor.set_brightness(-1)                   #Adjusts brightness (-3;3)
+
+clock = time.clock()
+
+while(True):
+    clock.tick()
+    img = sensor.snapshot()
+    for blob in img.find_blobs([thresholds], pixels_threshold=100, area_threshold=100, merge=True):
+        img.draw_rectangle(blob.rect())
+        img.draw_cross(blob.cx(), blob.cy())
+        print(blob.cx(), blob.cy(), blob.w(), blob.h())
